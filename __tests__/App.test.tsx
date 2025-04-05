@@ -3,11 +3,24 @@
  */
 
 import React from 'react';
-import ReactTestRenderer from 'react-test-renderer';
+import { render } from '@testing-library/react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import App from '../App';
 
-test('renders correctly', async () => {
-  await ReactTestRenderer.act(() => {
-    ReactTestRenderer.create(<App />);
+jest.mock('../src/navigation/AppNavigator', () => ({
+  AppNavigator: () => null,
+}));
+
+describe('App Component', () => {
+  it('renders without crashing', () => {
+    const { getByTestId } = render(
+      <SafeAreaProvider>
+        <NavigationContainer>
+          <App />
+        </NavigationContainer>
+      </SafeAreaProvider>
+    );
+    expect(getByTestId('app-root')).toBeTruthy();
   });
 });
